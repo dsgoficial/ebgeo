@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EBGeo</title>
+    <link rel="icon" type="image/x-icon" href="/ebgeo/images/favicon.ico">
+
+    <!-- SEM CSS DE VENDOR AQUI, desde 2026-09-14: esta página não liga mais nenhuma folha de
+         public/vendors/. A do MapLibre 6.x vem do pacote npm (src/js/map/maplibre.js) e a dos
+         widgets do Cesium também (src/js/vendor/cesium.js), de modo que ela viaja com o chunk
+         lazy do visualizador 3D e quem nunca o abre não a baixa. O `media="print"` que morava
+         aqui era a gambiarra para adiar aquela folha sem adiar o pedido; o import a adia de
+         verdade. -->
+
+    <!-- CSS principal (processado pelo Vite) -->
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        #map-sig {
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            cursor: default;
+            background:
+                radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.9) 0%, transparent 100%),
+                radial-gradient(1px 1px at 25% 35%, rgba(255,255,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 40% 15%, rgba(255,255,255,0.8) 0%, transparent 100%),
+                radial-gradient(1px 1px at 55% 45%, rgba(255,255,255,0.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 70% 25%, rgba(255,255,255,0.9) 0%, transparent 100%),
+                radial-gradient(1px 1px at 85% 40%, rgba(255,255,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 15% 60%, rgba(255,255,255,0.8) 0%, transparent 100%),
+                radial-gradient(1px 1px at 30% 75%, rgba(255,255,255,0.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 45% 55%, rgba(255,255,255,0.9) 0%, transparent 100%),
+                radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 75% 85%, rgba(255,255,255,0.8) 0%, transparent 100%),
+                radial-gradient(1px 1px at 90% 65%, rgba(255,255,255,0.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 5% 90%, rgba(255,255,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 20% 5%, rgba(255,255,255,0.9) 0%, transparent 100%),
+                radial-gradient(1px 1px at 35% 95%, rgba(255,255,255,0.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.8) 0%, transparent 100%),
+                radial-gradient(1px 1px at 65% 80%, rgba(255,255,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 80% 5%, rgba(255,255,255,0.9) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 12% 42%, rgba(200,220,255,1) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 48% 28%, rgba(255,240,200,1) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 72% 58%, rgba(200,220,255,1) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 88% 12%, rgba(255,200,180,1) 0%, transparent 100%),
+                radial-gradient(2px 2px at 33% 67%, rgba(255,255,255,1) 0%, transparent 100%),
+                radial-gradient(2px 2px at 67% 33%, rgba(200,220,255,1) 0%, transparent 100%),
+                radial-gradient(ellipse at 30% 70%, rgba(40,20,80,0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 30%, rgba(20,40,80,0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at center, #0d0d1a 0%, #050510 60%, #000005 100%);
+        }
+
+        .loading-background {
+            position: fixed;
+            background-color: #15803d;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: 0;
+            left: 0;
+        }
+
+        .loading-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #map-3d-container {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin-top: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #B4E380;
+            width: 0%;
+            border-radius: 2px;
+            animation: progressLoad 2s ease-out forwards;
+        }
+
+        @keyframes progressLoad {
+            0% {
+                width: 0%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        .loading-hidden {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-hidden.loaded {
+            opacity: 1;
+        }
+    </style>
+
+    <!-- META TAGS PARA PERFORMANCE -->
+    <meta name="theme-color" content="#15803d">
+    <meta name="color-scheme" content="light">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- RESOURCE HINTS -->
+    <link rel="preload" href="/ebgeo/images/logo_ebgeo.webp" as="image" fetchpriority="high">
+    <!-- O PREFETCH DO CESIUM SAIU EM 2026-09-14, E O QUE SE PERDEU FICA DITO: ele aquecia os 5,7 MB
+         de /vendors/cesium/Cesium.js em tempo ocioso, de modo que a primeira abertura do
+         visualizador 3D achava a biblioteca em cache. Desde a migracao para o npm (cesium 1.145.0,
+         versao exata, pelo ponto unico src/js/vendor/cesium.js) o motor viaja dentro do chunk lazy
+         `cesium-integration`, cujo nome de arquivo carrega hash de conteudo e portanto nao existe
+         para quem escreve este HTML. Um prefetch de chunk exigiria adivinhar o arquivo pelo ROTULO
+         do grupo, e o comentario do vite.config.js registra que rotulo de chunk nunca prediz
+         conteudo; alem disso um href para /assets/ entraria na conta de peso desta pagina
+         (tests/unit/teto-de-peso-da-pagina-do-mapa.test.js conta todo src= e href= fora de
+         /vendors/), somando 4 MB a um teto que existe para acusar exatamente isso. O preco e a
+         primeira abertura do 3D baixar o motor na hora; toda abertura seguinte vem do cache, agora
+         com hash de conteudo, que o arquivo anterior nao tinha.
+         Sem prefetch de Three.js pela mesma razao, desde 2026-09-14 (three 0.164.0, versao exata,
+         pelo ponto unico src/js/vendor/three.js, dentro do chunk lazy do visualizador 360). -->
+
+  <script type="module" crossorigin src="/ebgeo/assets/main-DqAGLYwL.js"></script>
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/modulepreload-polyfill-DPaS0Q34.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/analysis-tools-BXfqU2Xx.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/analysis-tools-KiuN77Gz.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-B7m_bcPn.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-5KAH9gDS.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-CdyIUabs.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/core-DWsk6680.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-BAFZZkYM.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-CUj0Eies.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-BWYoqZMf.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-ChkmbID6.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-28wP2kiv.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/analysis-tools-CyzgVZWt.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-M-Rxbkmo.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-DZA3gn-h.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-DAOG4Ar5.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-DXjEir_s.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/import-export-DSD2Z7Re.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/core-jfVfnzN5.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/draw-tools-Dk2pViky.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-DWeV8QjL.js">
+  <link rel="stylesheet" crossorigin href="/ebgeo/assets/analysis-tools~main~calibracao-C6tlpoA4.css">
+  <link rel="stylesheet" crossorigin href="/ebgeo/assets/main-C-KPiJAO.css">
+  <script type="module">import'data:text/javascript,if(!import.meta.resolve)throw Error("import.meta.resolve not supported")';import.meta.url;import("_").catch(()=>1);(async function*(){})().next();window.__vite_is_modern_browser=true</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+</head>
+
+<body>
+    <!-- LOADING SCREEN OTIMIZADA -->
+    <div class="loading-background" id="initial-loader">
+        <div class="loading-content">
+            <img src="/ebgeo/images/logo_ebgeo.webp" alt="EBGeo" style="width: 300px; height: auto;" fetchpriority="high">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENT AREAS -->
+    <div id="map-sig" class="loading-hidden" role="application" aria-label="Mapa 2D"></div>
+
+    <!-- 3D CONTAINER - LAZY LOADED -->
+    <div id="map-3d-container" style="display: none;" role="application" aria-label="Mapa 3D">
+        <div id="map-3d"></div>
+
+        <!-- Active Tool Chip 3D -->
+        <div id="active-tool-chip-3d" class="active-tool-chip-3d" style="display: none;">
+            <div class="active-tool-chip-3d-inner">
+                <span class="active-tool-chip-3d-label">Ferramenta ativa:</span>
+                <span id="active-tool-chip-3d-name" class="active-tool-chip-3d-name"></span>
+                <button id="active-tool-chip-3d-close" class="active-tool-chip-3d-close" title="Desativar ferramenta (ESC)" aria-label="Desativar ferramenta">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- 3D Toolbar - Vertical sidebar on the right -->
+        <div id="toolbar-3d" role="toolbar" aria-label="Ferramentas 3D">
+            <button id="visualizacao" class="button-tool-3d" aria-label="Análise de visibilidade (V)">
+                <img src="/ebgeo/images/viewshed_icon.svg" alt="" width="22" height="22" loading="lazy">
+            </button>
+            <button id="distancia" class="button-tool-3d" aria-label="Medir distância (D)">
+                <img src="/ebgeo/images/distance_icon.svg" alt="" width="22" height="22" loading="lazy">
+            </button>
+            <button id="area" class="button-tool-3d" aria-label="Medir área (A)">
+                <img src="/ebgeo/images/area_icon.svg" alt="" width="22" height="22" loading="lazy">
+            </button>
+            <button id="add-marker-3d" class="button-tool-3d" aria-label="Adicionar marcador (M)">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <line x1="12" y1="8" x2="12" y2="14"/>
+                    <line x1="9" y1="11" x2="15" y2="11"/>
+                </svg>
+            </button>
+            <div class="toolbar-3d-separator"></div>
+            <button id="salvar-camera" class="button-tool-3d" aria-label="Salvar posição da câmera">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                </svg>
+            </button>
+            <button id="limpar-camera" class="button-tool-3d" aria-label="Limpar posição salva" style="display: none;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <line x1="9" y1="10" x2="15" y2="16"/>
+                    <line x1="15" y1="10" x2="9" y2="16"/>
+                </svg>
+            </button>
+            <button id="voar-camera" class="button-tool-3d" aria-label="Voar para posição salva" title="Voar para posição salva" style="display: none;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 2L11 13"/>
+                    <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+                </svg>
+            </button>
+            <button id="share-3d" class="button-tool-3d" aria-label="Compartilhar visão 3D">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3"/>
+                    <circle cx="6" cy="12" r="3"/>
+                    <circle cx="18" cy="19" r="3"/>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                </svg>
+            </button>
+            <div class="toolbar-3d-separator"></div>
+            <button id="help-3d" class="button-tool-3d" aria-label="Ajuda" aria-expanded="false">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.5 9a3 3 0 0 1 5.5 1.5c0 2-3 3-3 3"/>
+                    <circle cx="12" cy="17" r="0.5" fill="currentColor"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Navigation Help Popup -->
+        <div id="nav-help-popup" class="nav-help-popup" role="dialog" aria-label="Ajuda de navegação" hidden>
+            <div class="nav-help-tabs" role="tablist">
+                <button class="nav-help-tab active" role="tab" aria-selected="true" data-tab="mouse">
+                    <img src="/ebgeo/images/nav-help/mouse.svg" alt="" width="24" height="24">
+                    Mouse
+                </button>
+                <button class="nav-help-tab" role="tab" aria-selected="false" data-tab="touch">
+                    <img src="/ebgeo/images/nav-help/touch.svg" alt="" width="24" height="24">
+                    Touch
+                </button>
+            </div>
+            <div class="nav-help-content">
+                <!-- Mouse Tab -->
+                <div class="nav-help-panel active" data-panel="mouse">
+                    <div class="nav-help-item">
+                        <div class="nav-help-icon">
+                            <img src="/ebgeo/images/nav-help/mouse-left.svg" alt="Botão esquerdo do mouse">
+                        </div>
+                        <div class="nav-help-text">
+                            <strong>Mover visão</strong>
+                            <span>Clique esquerdo + arrastar</span>
+                        </div>
+                    </div>
+                    <div class="nav-help-item">
+                        <div class="nav-help-icon">
+                            <img src="/ebgeo/images/nav-help/mouse-right.svg" alt="Botão direito do mouse">
+                        </div>
+                        <div class="nav-help-text">
+                            <strong>Rotacionar visão</strong>
+                            <span>Clique direito + arrastar</span>
+                        </div>
+                    </div>
+                    <div class="nav-help-item">
+                        <div class="nav-help-icon">
+                            <img src="/ebgeo/images/nav-help/mouse-middle.svg" alt="Roda do mouse">
+                        </div>
+                        <div class="nav-help-text">
+                            <strong>Ampliar visão</strong>
+                            <span>Rolagem da roda do mouse</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Touch Tab -->
+                <div class="nav-help-panel" data-panel="touch">
+                    <div class="nav-help-item">
+                        <div class="nav-help-icon">
+                            <img src="/ebgeo/images/nav-help/touch-drag.svg" alt="Arrastar com um dedo">
+                        </div>
+                        <div class="nav-help-text">
+                            <strong>Mover visão</strong>
+                            <span>Arrastar com um dedo</span>
+                        </div>
+                    </div>
+                    <div class="nav-help-item">
+                        <div class="nav-help-icon">
+                            <img src="/ebgeo/images/nav-help/touch-zoom.svg" alt="Pinçar com dois dedos">
+                        </div>
+                        <div class="nav-help-text">
+                            <strong>Ampliar visão</strong>
+                            <span>Pinçar com dois dedos</span>
+                        </div>
+                    </div>
+                    <div class="nav-help-item">
+                        <div class="nav-help-icon">
+                            <img src="/ebgeo/images/nav-help/touch-tilt.svg" alt="Arrastar com dois dedos">
+                        </div>
+                        <div class="nav-help-text">
+                            <strong>Inclinar visão</strong>
+                            <span>Arrastar com dois dedos na mesma direção</span>
+                        </div>
+                    </div>
+                    <div class="nav-help-item">
+                        <div class="nav-help-icon">
+                            <img src="/ebgeo/images/nav-help/touch-rotate.svg" alt="Rotacionar com dois dedos">
+                        </div>
+                        <div class="nav-help-text">
+                            <strong>Rotacionar visão</strong>
+                            <span>Arrastar com dois dedos em direções opostas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING ACTION BUTTONS -->
+    <a id="open-close-form" href="#" class="panel-icon-float" aria-label="Alternar painel de atributos"
+        style="display: none;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+        </svg>
+    </a>
+
+    <button id="close-street-view-button" type="button" style="display: none;" aria-label="Fechar foto 360°">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+        <span>Fechar</span>
+    </button>
+    <button id="close-3d-viewer-button" type="button" style="display: none;" aria-label="Fechar visualização 3D">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+        <span>Fechar</span>
+    </button>
+    <!-- Não recebe style="display:none" inline: .close-first-person-button já nasce
+         oculta em first-person-3d.css, e o visualizador a revela pela classe
+         --visible. Um display inline aqui venceria a classe e o botão nunca
+         apareceria. -->
+    <button id="close-first-person-button" class="close-first-person-button" type="button"
+        aria-label="Sair da cena em primeira pessoa">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+        <span>Fechar</span>
+    </button>
+
+    <!-- LAZY LOADED CONTAINERS -->
+    <div id="streetview-minimap-wrapper" style="display: none;">
+        <div id="streetview-photo-info"></div>
+        <div id="mini-map-street-view" role="application" aria-label="Minimapa da foto 360°"></div>
+    </div>
+    <div id="street-view-container" style="display: none;" role="application" aria-label="Foto 360°">
+        <!-- Canvas overlay for navigation markers - managed by navigator.js -->
+        <canvas id="nav-canvas-360" style="display: none;"></canvas>
+    </div>
+
+    <!-- Cena 3D em primeira pessoa (Gaussian splatting) - conteúdo montado pelo viewer lazy.
+         Toda a pintura vem das classes fp3d-*; os ids existem só para o getElementById. -->
+    <div id="first-person-container" class="fp3d-container" role="application"
+        aria-label="Cena 3D em primeira pessoa">
+        <div id="first-person-canvas" class="fp3d-canvas"></div>
+        <!-- Legenda de movimento, canto inferior esquerdo. Vive DENTRO do
+             container, e não solta como a barra e o botão fechar: assim ela
+             aparece e some junto com a cena, sem uma linha de JS para alternar.
+             Não recebe ponteiro porque girar a câmera é um arrasto que cobre a
+             cena inteira, e um retângulo clicável no canto seria um buraco nele.
+             Os mesmos atalhos estão na modal de atalhos (bloco "Primeira
+             Pessoa"); esta é a cópia visível para quem entra na cena e não abriu
+             a modal. Se um atalho mudar, mude nos dois lugares. -->
+        <!-- MODO IMERSIVO: a mira e o aviso, ambos escondidos até o ponteiro
+             ser preso de fato. Vivem DENTRO do container pelo mesmo motivo da
+             legenda de teclas: aparecem e somem com a cena.
+
+             A mira não recebe ponteiro NUNCA: ela fica no centro exato, que é
+             justamente onde o visitante mira, e um alvo clicável ali seria um
+             buraco no arrasto que gira a câmera fora do modo. -->
+        <div class="fp3d-crosshair fp3d-hidden" aria-hidden="true">
+            <span class="fp3d-crosshair__dot"></span>
+        </div>
+        <!-- O aviso é um BOTÃO de verdade, e desliga o modo. Enquanto o ponteiro
+             está preso ele não pode ser clicado (o navegador entrega todo clique
+             ao elemento travado e some com o cursor), então ali ele é aviso, e a
+             saída são ESC e o botão direito, que é o que o texto dele diz. Solto
+             o ponteiro — o navegador devolve sozinho ao trocar de aba ou perder
+             o foco — ele volta a ser o caminho de clique para sair. -->
+        <button type="button" class="fp3d-immersive-badge fp3d-hidden"
+            aria-label="Modo imersivo ligado. Sair com ESC ou botão direito">
+            <span class="fp3d-immersive-badge__dot"></span>
+            <span>Modo imersivo</span>
+            <span class="fp3d-immersive-badge__hint">ESC ou botão direito para sair</span>
+        </button>
+        <div class="fp3d-keyhints">
+            <!-- O teclado direcional desenhado na forma dele: o W em cima do S,
+                 e A S D embaixo. A FORMA é a legenda, então não há texto ao
+                 lado. Cada tecla carrega a seta equivalente, que é como o
+                 visitante descobre que as setas também andam, sem um "(ou
+                 setas)" escrito. role="img" com aria-label porque o desenho não
+                 se lê em voz alta: para o leitor de tela ele vira uma frase. -->
+            <div class="fp3d-keypad" role="img"
+                aria-label="W, A, S, D ou as setas direcionais: andar">
+                <kbd class="fp3d-key fp3d-key--pad">W<span class="fp3d-key__arrow">&#8593;</span></kbd>
+                <kbd class="fp3d-key fp3d-key--pad">A<span class="fp3d-key__arrow">&#8592;</span></kbd>
+                <kbd class="fp3d-key fp3d-key--pad">S<span class="fp3d-key__arrow">&#8595;</span></kbd>
+                <kbd class="fp3d-key fp3d-key--pad">D<span class="fp3d-key__arrow">&#8594;</span></kbd>
+            </div>
+            <!-- Grade de dois pares tecla/ação, e não duas linhas soltas: a
+                 coluna da esquerda se dimensiona pela caixa mais larga, então
+                 "Espaço" e "Shift" saem do mesmo tamanho sem largura chutada
+                 em CSS. -->
+            <div class="fp3d-keyhints__list">
+                <kbd class="fp3d-key">Espaço</kbd>
+                <span class="fp3d-keyhints__label">pular</span>
+                <kbd class="fp3d-key">Shift</kbd>
+                <span class="fp3d-keyhints__label">agachar</span>
+            </div>
+        </div>
+        <!-- Loading padrão do EBGeo: fundo verde, logo e barra de progresso, o
+             mesmo do carregamento inicial e do visualizador 3D. As classes
+             loading-3d-* vêm de panels-3d.css e são a moldura compartilhada de
+             carga dos visualizadores, apesar do nome. -->
+        <div id="first-person-loading" class="fp3d-loading" role="status" aria-live="polite">
+            <div class="loading-3d-content">
+                <img src="/ebgeo/images/logo_ebgeo.webp" alt="EBGeo" class="loading-3d-logo" fetchpriority="high">
+                <div class="loading-3d-bar">
+                    <div class="loading-3d-bar-fill"></div>
+                </div>
+                <div id="first-person-loading-message" class="fp3d-loading__message">Carregando cena...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STREET VIEW 360 TOOLBAR AND UI -->
+    <!-- Active Tool Chip 360 -->
+    <div id="active-tool-chip-360" class="active-tool-chip-360" style="display: none;">
+        <div class="active-tool-chip-360-inner">
+            <span class="active-tool-chip-360-label">Ferramenta ativa:</span>
+            <span id="active-tool-chip-360-name" class="active-tool-chip-360-name"></span>
+            <button id="active-tool-chip-360-close" class="active-tool-chip-360-close" title="Desativar ferramenta (ESC)" aria-label="Desativar ferramenta">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 360 Toolbar - Vertical sidebar on the right -->
+    <div id="toolbar-360" role="toolbar" aria-label="Ferramentas 360" style="display: none;">
+        <button id="add-marker-360" class="button-tool-360" aria-label="Adicionar marcador (M)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <line x1="12" y1="8" x2="12" y2="14"/>
+                <line x1="9" y1="11" x2="15" y2="11"/>
+            </svg>
+        </button>
+        <div class="toolbar-360-separator"></div>
+        <button id="salvar-orientacao-360" class="button-tool-360" aria-label="Salvar orientação (O)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+            </svg>
+        </button>
+        <button id="limpar-orientacao-360" class="button-tool-360" aria-label="Limpar orientação salva" style="display: none;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+                <line x1="15" y1="9" x2="9" y2="15"/>
+            </svg>
+        </button>
+        <button id="share-360" class="button-tool-360" aria-label="Compartilhar visão 360">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="5" r="3"/>
+                <circle cx="6" cy="12" r="3"/>
+                <circle cx="18" cy="19" r="3"/>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+        </button>
+        <div class="toolbar-360-separator"></div>
+        <button id="help-360" class="button-tool-360" aria-label="Ajuda" aria-expanded="false">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.5 9a3 3 0 0 1 5.5 1.5c0 2-3 3-3 3"/>
+                <circle cx="12" cy="17" r="0.5" fill="currentColor"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Navigation Help Popup 360 -->
+    <div id="nav-help-popup-360" class="nav-help-popup-360" role="dialog" aria-label="Ajuda de navegação 360" hidden>
+        <div class="nav-help-tabs-360" role="tablist">
+            <button class="nav-help-tab-360 active" role="tab" aria-selected="true" data-tab="mouse">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="6" y="2" width="12" height="20" rx="6"/>
+                    <line x1="12" y1="6" x2="12" y2="10"/>
+                </svg>
+                Mouse
+            </button>
+            <button class="nav-help-tab-360" role="tab" aria-selected="false" data-tab="keyboard">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="6" width="20" height="12" rx="2"/>
+                    <line x1="6" y1="10" x2="6" y2="10"/>
+                    <line x1="10" y1="10" x2="10" y2="10"/>
+                    <line x1="14" y1="10" x2="14" y2="10"/>
+                    <line x1="18" y1="10" x2="18" y2="10"/>
+                    <line x1="8" y1="14" x2="16" y2="14"/>
+                </svg>
+                Teclado
+            </button>
+            <button class="nav-help-tab-360" role="tab" aria-selected="false" data-tab="touch">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 13V5a2 2 0 0 1 4 0v6"/>
+                    <path d="M12 11V9.5a2 2 0 0 1 4 0V11"/>
+                    <path d="M16 11v-.5a2 2 0 0 1 4 0V16a5 5 0 0 1-5 5h-2a6 6 0 0 1-5.2-3L5 14.5a2 2 0 0 1 3.4-2.1L10 14"/>
+                </svg>
+                Toque
+            </button>
+        </div>
+        <div class="nav-help-content-360">
+            <!-- Mouse Tab -->
+            <div class="nav-help-panel-360 active" data-panel="mouse">
+                <div class="nav-help-item-360">
+                    <div class="nav-help-icon-360">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="6" y="2" width="12" height="20" rx="6"/>
+                            <path d="M6 8h12"/>
+                            <rect x="6" y="2" width="6" height="6" rx="3" fill="currentColor" opacity="0.3"/>
+                        </svg>
+                    </div>
+                    <div class="nav-help-text-360">
+                        <strong>Rotacionar visão</strong>
+                        <span>Clique esquerdo + arrastar</span>
+                    </div>
+                </div>
+                <div class="nav-help-item-360">
+                    <div class="nav-help-icon-360">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="6" y="2" width="12" height="20" rx="6"/>
+                            <line x1="12" y1="6" x2="12" y2="10"/>
+                            <path d="M9 8l3-3 3 3"/>
+                            <path d="M9 8l3 3 3-3" transform="translate(0, 6)"/>
+                        </svg>
+                    </div>
+                    <div class="nav-help-text-360">
+                        <strong>Ampliar/reduzir</strong>
+                        <span>Rolagem da roda do mouse</span>
+                    </div>
+                </div>
+                <div class="nav-help-item-360">
+                    <div class="nav-help-icon-360">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="8" fill="currentColor" opacity="0.2"/>
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 5v2"/>
+                            <path d="M12 17v2"/>
+                            <path d="M5 12h2"/>
+                            <path d="M17 12h2"/>
+                        </svg>
+                    </div>
+                    <div class="nav-help-text-360">
+                        <strong>Navegar</strong>
+                        <span>Clique nos marcadores no chão</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Keyboard Tab -->
+            <div class="nav-help-panel-360" data-panel="keyboard">
+                <div class="nav-help-item-360">
+                    <div class="nav-help-keys-360">
+                        <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>
+                    </div>
+                    <div class="nav-help-text-360">
+                        <strong>Rotacionar visão</strong>
+                        <span>ou setas direcionais</span>
+                    </div>
+                </div>
+                <div class="nav-help-item-360">
+                    <div class="nav-help-keys-360">
+                        <kbd>+</kbd><kbd>-</kbd>
+                    </div>
+                    <div class="nav-help-text-360">
+                        <strong>Ampliar/reduzir</strong>
+                        <span>Zoom da câmera</span>
+                    </div>
+                </div>
+                <div class="nav-help-item-360">
+                    <div class="nav-help-keys-360">
+                        <kbd>M</kbd>
+                    </div>
+                    <div class="nav-help-text-360">
+                        <strong>Marcador</strong>
+                        <span>Ativar ferramenta de marcador</span>
+                    </div>
+                </div>
+                <div class="nav-help-item-360">
+                    <div class="nav-help-keys-360">
+                        <kbd>O</kbd>
+                    </div>
+                    <div class="nav-help-text-360">
+                        <strong>Orientação</strong>
+                        <span>Salvar orientação da câmera</span>
+                    </div>
+                </div>
+                <div class="nav-help-item-360">
+                    <div class="nav-help-keys-360">
+                        <kbd>ESC</kbd>
+                    </div>
+                    <div class="nav-help-text-360">
+                        <strong>Fechar/Cancelar</strong>
+                        <span>Desativar ferramenta ou fechar viewer</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Touch Tab -->
+            <div class="nav-help-panel-360" data-panel="touch">
+                <div class="nav-help-item-360">
+                    <div class="nav-help-icon-360">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M8 13V5a2 2 0 0 1 4 0v6"/>
+                            <path d="M16 11v-.5a2 2 0 0 1 4 0V16a5 5 0 0 1-5 5h-2a6 6 0 0 1-5.2-3L5 14.5a2 2 0 0 1 3.4-2.1L10 14"/>
+                        </svg>
+                    </div>
+                    <div class="nav-help-text-360">
+                        <strong>Rotacionar visão</strong>
+                        <span>Arrastar com um dedo</span>
+                    </div>
+                </div>
+                <div class="nav-help-item-360">
+                    <div class="nav-help-icon-360">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 8l4-4"/>
+                            <path d="M3 4h4v4"/>
+                            <path d="M21 16l-4 4"/>
+                            <path d="M21 20h-4v-4"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <div class="nav-help-text-360">
+                        <strong>Ampliar/reduzir</strong>
+                        <span>Pinçar com dois dedos</span>
+                    </div>
+                </div>
+                <div class="nav-help-item-360">
+                    <div class="nav-help-icon-360">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="8" fill="currentColor" opacity="0.2" stroke="none"/>
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 5v2"/>
+                            <path d="M12 17v2"/>
+                        </svg>
+                    </div>
+                    <div class="nav-help-text-360">
+                        <strong>Navegar</strong>
+                        <span>Tocar nas setas sobre o horizonte</span>
+                    </div>
+                </div>
+                <div class="nav-help-item-360">
+                    <div class="nav-help-icon-360">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="nav-help-text-360">
+                        <strong>Marcador e comentário</strong>
+                        <span>Ativar na barra e tocar na foto</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRIMEIRA PESSOA - BARRA DE FERRAMENTAS -->
+    <!-- Barra vertical à direita, no mesmo lugar das barras do 3D e do 360.
+         Não há botão de ajuda: os atalhos da cena vivem na modal de atalhos. -->
+    <div id="toolbar-fp" class="toolbar-fp" role="toolbar" aria-label="Ferramentas da cena em primeira pessoa">
+        <button id="measure-fp" class="button-tool-fp" type="button" aria-pressed="false"
+            aria-label="Trena (T)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.3 8.7 8.7 21.3c-1 1-2.5 1-3.4 0l-2.6-2.6c-1-1-1-2.5 0-3.4L15.3 2.7c1-1 2.5-1 3.4 0l2.6 2.6c1 1 1 2.5 0 3.4Z"/>
+                <path d="m7.5 10.5 2 2"/>
+                <path d="m10.5 7.5 2 2"/>
+                <path d="m13.5 4.5 2 2"/>
+                <path d="m4.5 13.5 2 2"/>
+            </svg>
+        </button>
+        <button id="labels-fp" class="button-tool-fp" type="button" aria-pressed="true"
+            aria-label="Rótulos dos itens (L)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12.6 2.6a2 2 0 0 0-1.4-.6H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.2 8.2a2 2 0 0 0 2.8 0l7.2-7.2a2 2 0 0 0 0-2.8z"/>
+                <circle cx="7" cy="7" r="1.2" fill="currentColor" stroke="none"/>
+            </svg>
+        </button>
+        <button id="immersive-fp" class="button-tool-fp" type="button" aria-pressed="false"
+            aria-label="Modo imersivo: a visão segue o mouse">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="8"/>
+                <line x1="12" y1="1.5" x2="12" y2="6"/>
+                <line x1="12" y1="18" x2="12" y2="22.5"/>
+                <line x1="1.5" y1="12" x2="6" y2="12"/>
+                <line x1="18" y1="12" x2="22.5" y2="12"/>
+                <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+            </svg>
+        </button>
+        <div class="toolbar-fp-separator"></div>
+        <button id="share-fp" class="button-tool-fp" type="button" aria-label="Compartilhar esta posição">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="5" r="3"/>
+                <circle cx="6" cy="12" r="3"/>
+                <circle cx="18" cy="19" r="3"/>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- ========================================
+         VENDORS: ESTA SEÇÃO NÃO CARREGA MAIS NADA, E É SÓ REGISTRO
+         Desde 2026-09-14 não sobrou uma tag de biblioteca neste HTML: MapLibre, Cesium, Turf,
+         milsymbol e GDAL vêm TODOS do npm, cada um por um ponto único de src/js/vendor/ (o
+         MapLibre por src/js/map/maplibre.js), e nenhum deles mora mais em public/vendors/.
+         Sobrevivem lá duas coisas, e nenhuma é biblioteca desta página: o docsify, cujo
+         consumidor é public/docs/doc.html (servido estático, fora do Vite), e o plugin
+         cesium-viewshed.js, que 3d_models_viewer_tool/map_3d.js injeta em RUNTIME porque ele
+         lê e escreve window.Cesium, nunca a partir daqui. O que sobrevive abaixo é o porquê de
+         cada um continuar SOB DEMANDA e o que foi medido antes de tirar a tag: é isso que uma
+         tag reposta aqui desfaria em silêncio.
+    ======================================== -->
+    <!-- O MapLibre 6.x não tem mais bundle UMD, então saiu daqui: ele entra pelo npm, no primeiro
+         import de /src/js/index.js (map/maplibre.js), que publica o global `maplibregl` antes de
+         qualquer uso. O mapa continua sendo a página; o que mudou é por onde a biblioteca chega. -->
+
+    <!-- Turf: carregado SOB DEMANDA, e desde 2026-09-14 pelo npm (`@turf/turf` 7.4.0),
+         não mais por uma tag injetada apontando `public/vendors/turf.min.js`. Aquele
+         arquivo era a 7.0.0 (sem versão declarada, resolvida por hash) e foi APAGADO,
+         não deixado ao lado. Quem publica o global é o ponto único
+         `src/js/vendor/turf.js`, alcançado APENAS pelo `import()` de
+         `js/utilities/turf-loader.js`: um import estático dele devolveria a biblioteca
+         inteira ao boot e desfaria a onda descrita abaixo, sem nada parecer diferente.
+         São 619 kB, o maior item depois do MapLibre no script que esta página baixava
+         no boot (3749 kB medidos no pacote de produção em 2026-08-25, quando ainda
+         havia um `prefetch` do Cesium ao lado, que saiu em 2026-09-14).
+         Ao contrário do milsymbol e do GDAL, o Turf NÃO tem um leitor único: são 352
+         sítios de chamada em 48 arquivos, todos lendo o global direto (remedido em
+         2026-09-14; eram 257 em 35 na medição anterior). Por isso a
+         cobertura é por FUNIL, e são dois que respondem pela maioria:
+         `tool_manager/tool-registry.js:ensureControl` (todo gesto que ativa uma
+         ferramenta) e `tool_manager/selection_manager.js:getCompleteFeatureFromSource`
+         (toda seleção, local ou de colega, que é o que dispara `createSelectionBox`).
+         O resto ganhou `await ensureTurf()` no próprio ponto de entrada: importação,
+         exportação de PDF, processamento, dividir linha, combinar setas, painel de
+         localização, tabela de atributos, visualizador 360 e o `restoreMeasurements`
+         do boot. A carga é ESTRITAMENTE sob demanda, sem aquecimento em segundo
+         plano: com aquecimento, um sítio esquecido acharia o Turf pronto quase
+         sempre e falharia só às vezes. Não recoloque a tag aqui sem medir de novo. -->
+
+    <!-- Simbologia militar: carregada SOB DEMANDA, na primeira geração de símbolo
+         (js/military_tools/military_symbol_tool/milsymbol-loader.js), e desde
+         2026-09-14 pelo npm (`milsymbol` 3.0.4), não mais por uma tag injetada
+         apontando `public/vendors/milsymbol.min.js`. Aquele arquivo era a 3.0.3
+         (resolvida por hash) e foi APAGADO, não deixado ao lado. Quem publica o
+         global `ms` é o ponto único `src/js/vendor/milsymbol.js`, alcançado APENAS
+         pelo `import()` do carregador. São 855 kB, 14,6% do JavaScript inicial
+         desta página, e a medição com Proxy sobre window.ms num navegador real
+         mostrou que nada os lê durante o boot, nem em F5 com símbolo já na tela.
+         Não recoloque a tag aqui sem medir de novo. -->
+
+    <!-- GDAL para export de PDF georreferenciado: também não está mais aqui, e desde
+         2026-09-14 não está nem em `public/vendors/`. Ele vem do npm (gdal3.js 2.8.1)
+         pelo ponto único js/vendor/gdal.js, que o carrega por `import()` no clique em
+         Exportar (`handleExport`, em import_export/pdf-export.tab.js). A tag saiu antes,
+         em 2026-08-25: eram 187 kB dos 4509 kB de script que esta página baixava no boot,
+         com `defer`, e `defer` adia QUANDO o script roda, nunca SE ele baixa, de modo que
+         a página os pagava em toda carga e de novo em cada login, logout e troca de atlas.
+         O que a vinda pelo npm acrescenta é que o `.wasm` (28,2 MB) e o `.data` (11,6 MB)
+         deixaram de ser estáticos de `public/` e passaram a ser assets emitidos pelo Vite,
+         com hash de conteúdo e respeitando o `base` do deploy: quem os busca é o
+         `Module.locateFile` do Emscripten, pelas duas URLs que o ponto único passa em
+         `paths`. Não recoloque a tag aqui sem medir de novo. -->
+
+    <!-- ========================================
+         SCRIPT PRINCIPAL (processado pelo Vite)
+    ======================================== -->
+
+
+    <!-- FALLBACK PARA BROWSERS ANTIGOS -->
+    <script nomodule>
+        var loader = document.querySelector('.loading-background');
+        if (loader) {
+            loader.innerHTML = '<div style="color:white;text-align:center;padding:20px;">' +
+                '<h2>Navegador não suportado</h2>' +
+                '<p>Por favor, use um navegador mais recente.</p></div>';
+        }
+    </script>
+  <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule crossorigin id="vite-legacy-polyfill" src="/ebgeo/assets/polyfills-legacy-BhrkCIgF.js"></script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="/ebgeo/assets/main-legacy-a5RQvKGd.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+</body>
+
+</html>

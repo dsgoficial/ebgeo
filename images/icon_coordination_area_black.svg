@@ -1,0 +1,12 @@
+<!-- images/icon_coordination_area_black.svg -->
+<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Contorno de área com os dentes do Ponto Forte voltados para fora -->
+        <path d="M4 6 L15 4.5 L16.5 14 L5 15.5 Z"/>
+        <line x1="8" y1="5.5" x2="7.7" y2="3"/>
+        <line x1="12" y1="5" x2="11.7" y2="2.5"/>
+        <line x1="15.8" y1="9.2" x2="18.3" y2="8.9"/>
+        <line x1="10.8" y1="14.8" x2="11.1" y2="17.3"/>
+        <line x1="4.5" y1="10.7" x2="2" y2="11"/>
+    </g>
+</svg>

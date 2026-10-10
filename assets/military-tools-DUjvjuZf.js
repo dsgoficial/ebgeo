@@ -1,0 +1,1 @@
+import{Ao as s,Mo as o,jo as r,mo as t}from"./boot-DWeV8QjL.js";async function e(e,p,i,a=()=>!0){if(!(a()&&e&&p?.properties?.id&&i))return;if(!r(p.properties,i))return;s(p.properties,i);const{setProps:n,unsetProps:u}=o(i);e.patch(p.properties.id,{setProps:n,unsetProps:u}),await e.flush(),a()&&await t(p,i,null,a)}export{e as t};

@@ -1,0 +1,1 @@
+System.register([],function(t,e){var n,r;function i(t,e=n){return!Number.isFinite(t)||t<=0?0:t*t*(1-e)/(2*r)}return t({i:i,r:function(t,e,r,u,c=n){const s=u>0?r/u:0;return t+(e-t)*s-s*i(u,c)+i(r,c)}}),{setters:[],execute:function(){t("t",n=1/7),t("n",r=6371e3)}}});

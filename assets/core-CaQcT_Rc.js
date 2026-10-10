@@ -1,0 +1,1 @@
+var t=/^[=+\-@\t\r]/,r=/^-?\d+([.,]\d+)?$/;function e(e){const n=null==e?"":String(e),s=t.test(n),a=r.test(n.trim());return`"${(s&&!a?`'${n}`:n).replace(/"/g,'""')}"`}export{e as t};

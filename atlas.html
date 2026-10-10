@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Atlas — EBGeo</title>
+    <link rel="icon" type="image/x-icon" href="/ebgeo/images/favicon.ico">
+
+    <!-- CSS da tela de atlas (manifesto próprio, sem o mapa) -->
+
+    <style>
+        /* Splash de boot: duplicado do CSS para aparecer antes da folha de estilo resolver
+           (mesma abordagem do index.html). Removido por projects-page.js quando a página monta. */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .loading-background {
+            position: fixed;
+            background-color: #15803d;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: 0;
+            left: 0;
+        }
+
+        /* A MESMA moldura da abertura do mapa (index.html): logotipo de 300px e barra, que anima 2s e
+           para cheia (nao ha o que medir antes do JS). Compacto de proposito: este \3c style> e so a
+           abertura. Presa por tests/unit/abertura-igual-nas-quatro-paginas.test.js. */
+        .loading-content { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .progress-bar { width: 200px; height: 4px; margin-top: 20px; background: rgba(255, 255, 255, 0.3); border-radius: 2px; }
+        .progress-fill { width: 0%; height: 100%; background: #B4E380; border-radius: 2px; animation: progressLoad 2s ease-out forwards; }
+        @keyframes progressLoad { from { width: 0%; } to { width: 100%; } }
+    </style>
+
+    <meta name="theme-color" content="#15803d">
+    <meta name="color-scheme" content="light">
+    <meta name="robots" content="noindex, nofollow">
+  <script type="module" crossorigin src="/ebgeo/assets/atlas-CVH4UBN3.js"></script>
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/modulepreload-polyfill-DPaS0Q34.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/analysis-tools-KiuN77Gz.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-B7m_bcPn.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-CdyIUabs.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-BAFZZkYM.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-CUj0Eies.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-M-Rxbkmo.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/calibration-ObwvyBP_.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-DAOG4Ar5.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/core-DoRSYOyi.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/core-D6pADC97.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/core-SCxCTUh9.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/core-QMsEQr_X.js">
+  <link rel="stylesheet" crossorigin href="/ebgeo/assets/atlas-MSSEIHoR.css">
+  <script type="module">import'data:text/javascript,if(!import.meta.resolve)throw Error("import.meta.resolve not supported")';import.meta.url;import("_").catch(()=>1);(async function*(){})().next();window.__vite_is_modern_browser=true</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+</head>
+
+<body>
+    <!-- Splash de boot: a página só aparece depois de ler a configuração do servidor e de tentar
+         restaurar a sessão. Sem sessão ela NÃO redireciona: mostra os atlas deste computador e um
+         convite para entrar no lugar da lista do servidor. -->
+    <div class="loading-background" id="initial-loader">
+        <div class="loading-content">
+            <img src="/ebgeo/images/logo_ebgeo.webp" alt="EBGeo" width="300" fetchpriority="high">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sem vendors: esta página não carrega MapLibre, Turf, milsymbol, Cesium nem GDAL. -->
+
+    <script nomodule>
+        var loader = document.querySelector('.loading-background');
+        if (loader) {
+            loader.innerHTML = '<div style="color:white;text-align:center;padding:20px;">' +
+                '<h2>Navegador não suportado</h2>' +
+                '<p>Por favor, use um navegador mais recente.</p></div>';
+        }
+    </script>
+  <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule crossorigin id="vite-legacy-polyfill" src="/ebgeo/assets/polyfills-legacy-BhrkCIgF.js"></script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="/ebgeo/assets/atlas-legacy-BKjDc-Hd.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+</body>
+
+</html>

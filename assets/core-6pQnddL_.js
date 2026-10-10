@@ -1,0 +1,1 @@
+import{r as s}from"./modulepreload-polyfill-DPaS0Q34.js";var o=s({slidesEmMapaAusente:()=>a});function a(s,o,a=()=>null){let l=0;for(const e of s?.slides??[]){const s=e?.mapId;!s||o.has(s)||o.has(a(s))||l++}return l}export{a as n,o as t};

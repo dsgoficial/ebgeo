@@ -1,0 +1,1 @@
+System.register([],function(t,e){var r,n;return t("t",function(t){const e=null==t?"":String(t),s=r.test(e),u=n.test(e.trim());return`"${(s&&!u?`'${e}`:e).replace(/"/g,'""')}"`}),{setters:[],execute:function(){r=/^[=+\-@\t\r]/,n=/^-?\d+([.,]\d+)?$/}}});
