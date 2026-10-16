@@ -1,0 +1,1 @@
+import{bs as s,is as r,vs as t,ys as e}from"./boot-W24HRHCf.js";async function o(o,p,i,a=()=>!0){if(!(a()&&o&&p?.properties?.id&&i))return;if(!e(p.properties,i))return;t(p.properties,i);const{setProps:n,unsetProps:u}=s(i);o.patch(p.properties.id,{setProps:n,unsetProps:u}),await o.flush(),a()&&await r(p,i,null,a)}export{o as t};

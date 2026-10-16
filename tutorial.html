@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial — EBGeo</title>
+    <link rel="icon" type="image/x-icon" href="/ebgeo/images/favicon.ico">
+
+    <!-- SEM `<link rel="stylesheet">` AQUI, E ISSO É DELIBERADO. As outras páginas ligam a folha
+         delas pelo HTML; esta tem DUAS folhas que precisam entrar numa ordem definida (o tema
+         `core.css` do pacote docsify e a paleta da casa, `src/css/tutorial.css`), e a ordem entre
+         um `<link>` escrito à mão e o `<link>` que o Vite gera para o CSS do grafo de módulos
+         depende de onde o bundler injeta o dele. As duas entram pelo grafo, pelo entry abaixo, e
+         a ordem passa a ser a ordem dos imports, que está declarada lá. -->
+
+    <style>
+        /* Splash de boot: o docsify só substitui o conteúdo de `#app` depois de buscar o markdown,
+           então sem isto a página fica em branco na primeira carga (mesma abordagem das outras
+           quatro). */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        #app {
+            padding: 40px;
+            color: #6b7280;
+        }
+    </style>
+
+    <meta name="theme-color" content="#15803d">
+    <meta name="color-scheme" content="light">
+    <meta name="robots" content="noindex, nofollow">
+  <script type="module" crossorigin src="/ebgeo/assets/tutorial-rQ8Zjre6.js"></script>
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/modulepreload-polyfill-DPaS0Q34.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/core-DWsk6680.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/analysis-tools-CyzgVZWt.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/draw-tools-Dk2pViky.js">
+  <link rel="stylesheet" crossorigin href="/ebgeo/assets/tutorial-nLnv9qZg.css">
+  <script type="module">import'data:text/javascript,if(!import.meta.resolve)throw Error("import.meta.resolve not supported")';import.meta.url;import("_").catch(()=>1);(async function*(){})().next();window.__vite_is_modern_browser=true</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+</head>
+
+<body>
+    <!-- O docsify monta aqui (`el: '#app'`, o padrão). O texto é o estado de espera. -->
+    <div id="app">Carregando o tutorial…</div>
+
+    <!-- Sem vendors: esta página não carrega MapLibre, Turf, milsymbol, Cesium nem GDAL. O docsify
+         vem do npm, pelo ponto único `src/js/vendor/docsify.js`; até 2026-09-15 esta página era
+         `public/docs/doc.html` e puxava o docsify 4.13.1 de `public/vendors/` por tag de script.
+         (O endereço antigo NÃO fica escrito aqui de propósito: a conta de peso de
+         `tests/unit/teto-de-peso-da-pagina-do-mapa.test.js` lê o HTML CONSTRUÍDO com uma regex de
+         atributo, que não distingue comentário de marcação, e um exemplo em comentário aparecia
+         na lista de vendors da página como se fosse referência viva.) -->
+
+    <script nomodule>
+        var app = document.getElementById('app');
+        if (app) {
+            app.innerHTML = '<h2>Navegador não suportado</h2>' +
+                '<p>Por favor, use um navegador mais recente para ler o tutorial.</p>';
+        }
+    </script>
+  <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule crossorigin id="vite-legacy-polyfill" src="/ebgeo/assets/polyfills-legacy-BhrkCIgF.js"></script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="/ebgeo/assets/tutorial-legacy-BXXdEyb1.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+</body>
+
+</html>
