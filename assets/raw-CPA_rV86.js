@@ -1,0 +1,1 @@
+import{t as e}from"./basedecoder-79N463vy.js";var r=class extends e{decodeBlock(e){return e}};export{r as default};

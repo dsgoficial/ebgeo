@@ -1,0 +1,1 @@
+System.register(["./boot-legacy-hNKKidFG.js"],function(t,e){return t("t",function(t,e,n){const[r,i]=Array.isArray(t)?t:[NaN,NaN];return[r+(Number.isFinite(e)?e:0),i+(Number.isFinite(n)?n:0)]}),{setters:[function(t){}],execute:function(){}}});

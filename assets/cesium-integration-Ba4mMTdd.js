@@ -1,0 +1,1 @@
+import{fc as t}from"./boot-heIu_Uy3.js";function o(o,n){const r=function(o=t()){return o?30:3}();return o?.pick?.(n,r,r)}export{o as t};

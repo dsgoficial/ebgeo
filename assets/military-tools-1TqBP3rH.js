@@ -1,0 +1,1 @@
+import{Au as s,Dd as r,Ed as t,Od as e}from"./boot-heIu_Uy3.js";async function o(o,p,i,a=()=>!0){if(!(a()&&o&&p?.properties?.id&&i))return;if(!r(p.properties,i))return;t(p.properties,i);const{setProps:n,unsetProps:u}=e(i);o.patch(p.properties.id,{setProps:n,unsetProps:u}),await o.flush(),a()&&await s(p,i,null,a)}export{o as t};

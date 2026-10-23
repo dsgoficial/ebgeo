@@ -1,0 +1,1 @@
+System.register(["./basedecoder-legacy-Dgm5ItTt.js"],function(e,t){var c;return{setters:[function(e){c=e.t}],execute:function(){e("default",class extends c{decodeBlock(e){return e}})}}});

@@ -1,0 +1,1 @@
+import"./boot-heIu_Uy3.js";function r(r,i,t){const[e,n]=Array.isArray(r)?r:[NaN,NaN];return[e+(Number.isFinite(i)?i:0),n+(Number.isFinite(t)?t:0)]}export{r as t};
