@@ -1,0 +1,1 @@
+import{Bd as s,Hd as r,Vd as t,Vu as e}from"./boot-CJd_bQ3K.js";async function o(o,p,i,a=()=>!0){if(!(a()&&o&&p?.properties?.id&&i))return;if(!t(p.properties,i))return;s(p.properties,i);const{setProps:n,unsetProps:u}=r(i);o.patch(p.properties.id,{setProps:n,unsetProps:u}),await o.flush(),a()&&await e(p,i,null,a)}export{o as t};

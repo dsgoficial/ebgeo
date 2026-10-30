@@ -1,0 +1,1 @@
+import{bc as t}from"./boot-CJd_bQ3K.js";function o(o,n){const r=function(o=t()){return o?30:3}();return o?.pick?.(n,r,r)}export{o as t};

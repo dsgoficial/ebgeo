@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Atlas — EBGeo</title>
+    <link rel="icon" type="image/x-icon" href="/ebgeo/images/favicon.ico">
+
+    <!-- CSS da tela de atlas (manifesto próprio, sem o mapa) -->
+
+    <style>body,html{flex-direction:column;width:100%;height:100%;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;display:flex;overflow:hidden}.loading-background{z-index:9999;background-color:#15803d;justify-content:center;align-items:center;width:100vw;height:100vh;display:flex;position:fixed;top:0;left:0}.loading-content{flex-direction:column;justify-content:center;align-items:center;display:flex}.progress-bar{background:rgba(255,255,255,.3);border-radius:2px;width:200px;height:4px;margin-top:20px}.progress-fill{background:#b4e380;border-radius:2px;width:0%;height:100%;animation:2s ease-out forwards progressLoad}@keyframes progressLoad{0%{width:0%}to{width:100%}}</style>
+
+    <meta name="theme-color" content="#15803d">
+    <meta name="color-scheme" content="light">
+    <meta name="robots" content="noindex, nofollow">
+  <script type="module" crossorigin src="/ebgeo/assets/atlas-Cs_e4R5X.js"></script>
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/modulepreload-polyfill-axk1WA_r.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/rolldown-runtime-BnWHs9CS.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/analysis-tools-Dpds1-tG.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-CjlQec4W.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-Dg6059iO.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-BNRpmmEL.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-B7q2Nfht.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-M-Rxbkmo.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-i3rIDTZE.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/calibration-DUE6VTov.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/boot-2Vaph9dQ.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/core-DoRSYOyi.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/core-DuHzpKD2.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/core-DQyW0jLZ.js">
+  <link rel="modulepreload" crossorigin href="/ebgeo/assets/core-D1vhuzjr.js">
+  <link rel="stylesheet" crossorigin href="/ebgeo/assets/core~atlas~create-atlas-DAop2lZQ.css">
+  <link rel="stylesheet" crossorigin href="/ebgeo/assets/atlas-JjxYEOGh.css">
+  <script type="module">import'data:text/javascript,if(!import.meta.resolve)throw Error("import.meta.resolve not supported")';import.meta.url;import("_").catch(()=>1);(async function*(){})().next();window.__vite_is_modern_browser=true</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+</head>
+
+<body>
+    <!-- Splash de boot: a página só aparece depois de ler a configuração do servidor e de tentar
+         restaurar a sessão. Sem sessão ela NÃO redireciona: mostra os atlas deste computador e um
+         convite para entrar no lugar da lista do servidor. -->
+    <div class="loading-background" id="initial-loader">
+        <div class="loading-content">
+            <img src="/ebgeo/images/logo_ebgeo.webp" alt="EBGeo" width="300" fetchpriority="high">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sem vendors: esta página não carrega MapLibre, Turf, milsymbol, Cesium nem GDAL. -->
+
+    <script nomodule>
+        var loader = document.querySelector('.loading-background');
+        if (loader) {
+            loader.innerHTML = '<div style="color:white;text-align:center;padding:20px;">' +
+                '<h2>Navegador não suportado</h2>' +
+                '<p>Por favor, use um navegador mais recente.</p></div>';
+        }
+    </script>
+  <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule crossorigin id="vite-legacy-polyfill" src="/ebgeo/assets/polyfills-legacy-BFqI_nH7.js"></script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="/ebgeo/assets/atlas-legacy-DEUCbtzH.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+</body>
+
+</html>

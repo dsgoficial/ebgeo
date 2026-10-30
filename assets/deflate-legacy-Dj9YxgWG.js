@@ -1,0 +1,1 @@
+System.register(["./basedecoder-legacy-Dgm5ItTt.js","./pako.esm-legacy-DA3PWWiX.js"],function(e,t){var n,r;return{setters:[function(e){n=e.t},function(e){r=e.t}],execute:function(){e("default",class extends n{decodeBlock(e){return r(new Uint8Array(e)).buffer}})}}});

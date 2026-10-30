@@ -1,0 +1,1 @@
+System.register([],function(e,t){return e("t",function(e,{long:t=!1}={}){const n=e??0;return`${Math.abs(n).toFixed(1).replace(".",",")}° ${n>=0?t?"Leste":"E":t?"Oeste":"W"}`}),{setters:[],execute:function(){}}});

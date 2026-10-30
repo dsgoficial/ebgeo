@@ -1,0 +1,1 @@
+function t(t,e){if(e.has(t))throw new TypeError("Cannot initialize the same private elements twice on an object")}function e(e,n,i){t(e,n),n.set(e,i)}function n(t,e,n){if("function"==typeof t?t===e:t.has(e))return arguments.length<3?e:n;throw new TypeError("Private element is not present on this object")}function i(t,e){return t.get(n(t,e))}export{t as i,n,e as r,i as t};

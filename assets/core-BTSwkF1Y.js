@@ -1,0 +1,1 @@
+function e(e,{long:t=!1}={}){const n=e??0;return`${Math.abs(n).toFixed(1).replace(".",",")}° ${n>=0?t?"Leste":"E":t?"Oeste":"W"}`}export{e as t};
