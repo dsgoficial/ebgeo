@@ -1,0 +1,1 @@
+import{r as s}from"./rolldown-runtime-BnWHs9CS.js";var n=s({slidesEmMapaAusente:()=>o});function o(s,n,o=()=>null){let r=0;for(const t of s?.slides??[]){const s=t?.mapId;!s||n.has(s)||n.has(o(s))||r++}return r}export{o as n,n as t};

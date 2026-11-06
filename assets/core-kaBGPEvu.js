@@ -1,0 +1,1 @@
+import{i as o}from"./core-D0bHwmUw.js";function r(r,t){o(r,t),t.add(r)}export{r as t};

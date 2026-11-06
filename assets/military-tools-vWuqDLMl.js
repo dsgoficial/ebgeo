@@ -1,0 +1,1 @@
+import{Am as s,Om as r,bp as t,km as p}from"./boot-BfaPTxIP.js";async function e(e,o,i,a=()=>!0){if(!(a()&&e&&o?.properties?.id&&i))return;if(!p(o.properties,i))return;r(o.properties,i);const{setProps:n,unsetProps:u}=s(i);e.patch(o.properties.id,{setProps:n,unsetProps:u}),await e.flush(),a()&&await t(o,i,null,a)}export{e as t};
