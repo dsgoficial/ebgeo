@@ -1,0 +1,184 @@
+{
+  "areia": {
+    "height": 38,
+    "pixelRatio": 1,
+    "width": 38,
+    "x": 190,
+    "y": 0
+  },
+  "arroz": {
+    "height": 19,
+    "pixelRatio": 1,
+    "width": 19,
+    "x": 228,
+    "y": 0
+  },
+  "brejo": {
+    "height": 38,
+    "pixelRatio": 1,
+    "width": 38,
+    "x": 190,
+    "y": 38
+  },
+  "campo": {
+    "height": 42,
+    "pixelRatio": 1,
+    "width": 38,
+    "x": 152,
+    "y": 0
+  },
+  "cana": {
+    "height": 38,
+    "pixelRatio": 1,
+    "width": 38,
+    "x": 152,
+    "y": 42
+  },
+  "cascalho": {
+    "height": 38,
+    "pixelRatio": 1,
+    "width": 38,
+    "x": 190,
+    "y": 76
+  },
+  "cerrado": {
+    "height": 38,
+    "pixelRatio": 1,
+    "width": 38,
+    "x": 0,
+    "y": 76
+  },
+  "corredeira": {
+    "height": 16,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 228,
+    "y": 19
+  },
+  "cultivo": {
+    "height": 4,
+    "pixelRatio": 1,
+    "width": 4,
+    "x": 247,
+    "y": 15
+  },
+  "duna": {
+    "height": 76,
+    "pixelRatio": 1,
+    "width": 76,
+    "x": 0,
+    "y": 0
+  },
+  "estufa": {
+    "height": 4,
+    "pixelRatio": 1,
+    "width": 4,
+    "x": 251,
+    "y": 15
+  },
+  "favela": {
+    "height": 38,
+    "pixelRatio": 1,
+    "width": 38,
+    "x": 38,
+    "y": 76
+  },
+  "fenda": {
+    "height": 7,
+    "pixelRatio": 1,
+    "width": 7,
+    "x": 247,
+    "y": 8
+  },
+  "floresta_esparsa": {
+    "height": 38,
+    "pixelRatio": 1,
+    "width": 38,
+    "x": 76,
+    "y": 76
+  },
+  "geleira": {
+    "height": 38,
+    "pixelRatio": 1,
+    "width": 38,
+    "x": 114,
+    "y": 76
+  },
+  "leito_seco": {
+    "height": 38,
+    "pixelRatio": 1,
+    "width": 38,
+    "x": 152,
+    "y": 80
+  },
+  "mangue": {
+    "height": 76,
+    "pixelRatio": 1,
+    "width": 76,
+    "x": 76,
+    "y": 0
+  },
+  "nipa": {
+    "height": 38,
+    "pixelRatio": 1,
+    "width": 38,
+    "x": 190,
+    "y": 114
+  },
+  "pomar": {
+    "height": 4,
+    "pixelRatio": 1,
+    "width": 4,
+    "x": 251,
+    "y": 25
+  },
+  "rocha": {
+    "height": 38,
+    "pixelRatio": 1,
+    "width": 38,
+    "x": 0,
+    "y": 114
+  },
+  "rocha_agua": {
+    "height": 38,
+    "pixelRatio": 1,
+    "width": 38,
+    "x": 38,
+    "y": 114
+  },
+  "salina": {
+    "height": 6,
+    "pixelRatio": 1,
+    "width": 6,
+    "x": 245,
+    "y": 25
+  },
+  "tsi": {
+    "height": 8,
+    "pixelRatio": 1,
+    "width": 8,
+    "x": 247,
+    "y": 0
+  },
+  "tsi_orto": {
+    "height": 15,
+    "pixelRatio": 1,
+    "width": 15,
+    "x": 228,
+    "y": 35
+  },
+  "turfa": {
+    "height": 6,
+    "pixelRatio": 1,
+    "width": 6,
+    "x": 245,
+    "y": 31
+  },
+  "vinhedo": {
+    "height": 6,
+    "pixelRatio": 1,
+    "width": 10,
+    "x": 245,
+    "y": 19
+  }
+}

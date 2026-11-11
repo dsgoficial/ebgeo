@@ -1,0 +1,1 @@
+System.register([],function(t,r){return t("t",async function(t,r){const e=[],s=[];for(const c of Array.isArray(t)?t:[])try{e.push({item:c,resposta:await r(c)})}catch(n){s.push({item:c,erro:n})}return{feitos:e,recusas:s}}),{setters:[],execute:function(){}}});

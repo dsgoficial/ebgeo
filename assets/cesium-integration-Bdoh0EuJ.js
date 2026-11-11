@@ -1,0 +1,1 @@
+function t(t){return t>=1e3?`${(t/1e3).toFixed(2)} km`:`${t.toFixed(2)} m`}function e(t){return t>=1e6?`${(t/1e6).toFixed(2)} km²`:`${t.toFixed(2)} m²`}function r(r){const n=r?.result,o=n?.value;return"number"==typeof o&&Number.isFinite(o)?"area"===r.type?e(o):t(o):"string"==typeof n?.formatted&&""!==n.formatted?n.formatted:null}export{t as n,r,e as t};

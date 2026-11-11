@@ -1,0 +1,1 @@
+function r(r,s=1){if(!r)return Cesium.Color.WHITE.withAlpha(s);const t=r.replace("#",""),n=parseInt(t.substring(0,2),16)/255,e=parseInt(t.substring(2,4),16)/255,i=parseInt(t.substring(4,6),16)/255;return new Cesium.Color(n,e,i,s)}export{r as t};

@@ -1,0 +1,1 @@
+async function r(r,t){const s=[],a=[];for(const e of Array.isArray(r)?r:[])try{s.push({item:e,resposta:await t(e)})}catch(o){a.push({item:e,erro:o})}return{feitos:s,recusas:a}}export{r as t};

@@ -1,0 +1,1 @@
+var n=1/7,r=6371e3;function t(n,r=.14285714285714285){return!Number.isFinite(n)||n<=0?0:n*n*(1-r)/12742e3}function e(n,r,e,i,s=.14285714285714285){const a=i>0?e/i:0;return n+(r-n)*a-a*t(i,s)+t(e,s)}export{t as i,r as n,e as r,n as t};

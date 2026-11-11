@@ -1,0 +1,1 @@
+import{Np as s,ch as r,oh as t,sh as o}from"./boot-n6_WriS3.js";async function p(p,e,a,i=()=>!0){if(!(i()&&p&&e?.properties?.id&&a))return;if(!o(e.properties,a))return;t(e.properties,a);const{setProps:n,unsetProps:u}=r(a);p.patch(e.properties.id,{setProps:n,unsetProps:u}),await p.flush(),i()&&await s(e,a,null,i)}export{p as t};

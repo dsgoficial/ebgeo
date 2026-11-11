@@ -1,0 +1,1 @@
+import"./boot-n6_WriS3.js";function r(r,i,t){const[a,e]=Array.isArray(r)?r:[NaN,NaN];return[a+(Number.isFinite(i)?i:0),e+(Number.isFinite(t)?t:0)]}export{r as t};

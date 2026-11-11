@@ -1,0 +1,1 @@
+var t=new Set(["INPUT","TEXTAREA"]);function e(e){if(!e||"object"!=typeof e)return!1;const n=e.tagName;if("string"==typeof n&&t.has(n))return!0;if(e.isContentEditable)return!0;const o=e.closest;return"function"==typeof o&&Boolean(o.call(e,'[contenteditable="true"]')||o.call(e,".ql-editor"))}export{e as t};

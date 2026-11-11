@@ -1,0 +1,1 @@
+import{Iu as t}from"./boot-n6_WriS3.js";function o(o,n){const r=function(o=t()){return o?30:3}();return o?.pick?.(n,r,r)}export{o as t};

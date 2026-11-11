@@ -1,0 +1,1 @@
+System.register([],function(e,s){return{setters:[],execute:function(){e("n","/ebgeo/assets/gdal3WebAssembly-DRcsV-5Y.wasm"),e("t","/ebgeo/assets/gdal3WebAssembly-Bu3ZR6-6.data")}}});
