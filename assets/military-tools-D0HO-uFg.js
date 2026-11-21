@@ -1,0 +1,1 @@
+import{A_ as s,M_ as r,j_ as t,rg as e}from"./boot-C4J8Bkba.js";async function o(o,p,a,i=()=>!0){if(!(i()&&o&&p?.properties?.id&&a))return;if(!t(p.properties,a))return;s(p.properties,a);const{setProps:n,unsetProps:u}=r(a);o.patch(p.properties.id,{setProps:n,unsetProps:u}),await o.flush(),i()&&await e(p,a,null,i)}export{o as t};

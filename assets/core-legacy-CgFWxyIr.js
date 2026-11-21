@@ -1,0 +1,1 @@
+System.register([],function(t,e){var n;return t("t",function(t){if(!t||"object"!=typeof t)return!1;const e=t.tagName;if("string"==typeof e&&n.has(e))return!0;if(t.isContentEditable)return!0;const r=t.closest;return"function"==typeof r&&Boolean(r.call(t,'[contenteditable="true"]')||r.call(t,".ql-editor"))}),{setters:[],execute:function(){n=new Set(["INPUT","TEXTAREA"])}}});
