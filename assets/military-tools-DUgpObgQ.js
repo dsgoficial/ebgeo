@@ -1,0 +1,1 @@
+import{L_ as s,dy as r,fy as t,py as p}from"./boot-CdkWXDov.js";async function e(e,o,a,i=()=>!0){if(!(i()&&e&&o?.properties?.id&&a))return;if(!t(o.properties,a))return;r(o.properties,a);const{setProps:n,unsetProps:u}=p(a);e.patch(o.properties.id,{setProps:n,unsetProps:u}),await e.flush(),i()&&await s(o,a,null,i)}export{e as t};

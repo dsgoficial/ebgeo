@@ -1,0 +1,1 @@
+System.register([],function(e,t){return e("t",function(e){if(null==e)return"";const t="string"==typeof e?e:String(e);return""===t?"":t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}),{setters:[],execute:function(){}}});

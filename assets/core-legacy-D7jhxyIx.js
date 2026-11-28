@@ -1,0 +1,1 @@
+System.register([],function(e,t){return e("t",function({setTimeout:e=globalThis.setTimeout,clearTimeout:t=globalThis.clearTimeout,espera:r=600}={}){const s=new Map,a=e=>{s.has(e)&&(t(s.get(e)),s.delete(e))};return{agendar(t,n){a(t),s.set(t,e(()=>{s.delete(t),n()},r))},cancelar:a,parar(){for(const e of[...s.keys()])a(e)}}}),{setters:[],execute:function(){}}});

@@ -1,0 +1,1 @@
+function e(e){if(null==e)return"";const r="string"==typeof e?e:String(e);return""===r?"":r.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}export{e as t};

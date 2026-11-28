@@ -1,0 +1,1 @@
+function e({setTimeout:e=globalThis.setTimeout,clearTimeout:t=globalThis.clearTimeout,espera:a=600}={}){const o=new Map,r=e=>{o.has(e)&&(t(o.get(e)),o.delete(e))};return{agendar(t,s){r(t),o.set(t,e(()=>{o.delete(t),s()},a))},cancelar:r,parar(){for(const e of[...o.keys()])r(e)}}}export{e as t};
